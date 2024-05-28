@@ -11,21 +11,23 @@ import android.util.Log
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import io.flutter.plugin.common.MethodChannel
 
-class FlutterSmsReceiver(
+typealias OtpCallback = (otp: String) -> Unit
+
+class FlutterSmsRetriever(
     private val activity: Activity,
     private val context: Context,
-    private val channel: MethodChannel,
+    private val onOtpReceived: OtpCallback,
 ) : BroadcastReceiver(), OtpReceiver {
 
     private val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
 
-    override fun dispose(){
+    override fun dispose() {
         Log.w(TAG, "FlutterSmsRetriever dispose")
         context.unregisterReceiver(this)
     }
-    override fun startReceiver(){
+
+    override fun startReceiver() {
         val client = SmsRetriever.getClient(activity)
         val task = client.startSmsRetriever()
         task.addOnSuccessListener {
@@ -37,10 +39,10 @@ class FlutterSmsReceiver(
         }
     }
 
-    private fun emitOtp(otp: String?){
+    private fun emitOtp(otp: String?) {
         Log.w(TAG, "otp emitted")
-        if(otp!=null){
-            channel.invokeMethod("otp", otp)
+        if (otp != null) {
+            onOtpReceived(otp)
         }
     }
 
@@ -58,9 +60,11 @@ class FlutterSmsReceiver(
                     val otp = retrieveOtpFromMessage(message)
                     emitOtp(otp)
                 }
+
                 CommonStatusCodes.TIMEOUT -> {
                     Log.w(TAG, "timeout")
                 }
+
                 else -> {
                     Log.w(TAG, "unexpected error")
                 }
