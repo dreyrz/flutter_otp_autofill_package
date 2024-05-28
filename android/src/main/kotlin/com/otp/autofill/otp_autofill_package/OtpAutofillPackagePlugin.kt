@@ -2,6 +2,7 @@ package com.otp.autofill.otp_autofill_package
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -13,9 +14,12 @@ import io.flutter.plugin.common.MethodChannel.Result
 /** OtpAutofillPackagePlugin */
 class OtpAutofillPackagePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private lateinit var channel: MethodChannel
+    private lateinit var context: Context
+    private lateinit var activity: Activity
     private var otpReceiver: OtpReceiver? = null
-    private var activity: Activity? = null
-    private var context: Context? = null
+    private val channelName: String = "otp_autofill_package"
+    private val tag = OtpAutofillPackagePlugin::class.qualifiedName
+
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
@@ -48,7 +52,7 @@ class OtpAutofillPackagePlugin : FlutterPlugin, MethodCallHandler, ActivityAware
     }
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "otp_autofill_package")
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, channelName)
         channel.setMethodCallHandler(this)
         context = flutterPluginBinding.applicationContext
     }
