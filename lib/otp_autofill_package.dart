@@ -18,6 +18,8 @@ class OtpAutofillPackage {
 
   OtpCallback? _otpCallback;
 
+  bool _isListening = false;
+
   Future<void> _emitOtpState(MethodCall methodCalled) async {
     if (methodCalled.method == "otp") {
       _otpCallback?.call(methodCalled.arguments);
@@ -28,15 +30,18 @@ class OtpAutofillPackage {
   Future<void> startListening({
     OtpCallback? onOtpReceived,
   }) async {
+    if (_isListening) return;
     if (_otpStream.isClosed) {
       _otpStream = StreamController.broadcast();
     }
     await _channel.invokeMethod('startListening');
+    _isListening = true;
     _otpCallback = onOtpReceived;
   }
 
   Future<void> dispose() async {
     await _channel.invokeMethod('dispose');
     await _otpStream.close();
+    _isListening = false;
   }
 }
