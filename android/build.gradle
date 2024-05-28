@@ -29,7 +29,7 @@ android {
         namespace 'com.otp.autofill.otp_autofill_package'
     }
 
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
