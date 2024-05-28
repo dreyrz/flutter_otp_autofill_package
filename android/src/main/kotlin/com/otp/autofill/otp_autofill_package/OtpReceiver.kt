@@ -1,8 +1,5 @@
 package com.otp.autofill.otp_autofill_package
 
-import android.content.ContentValues.TAG
-import android.util.Log
-
 interface OtpReceiver {
     fun dispose()
     fun startReceiver()
@@ -12,7 +9,6 @@ interface OtpReceiver {
         }
         val regex = Regex("(\\d{6})")
         val match = regex.find(message)
-        Log.w(TAG, match?.value ?: "no match")
         return match?.value
     }
 }
