@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:otp_autofill_package/otp_autofill_package.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 import 'input.dart';
 
@@ -24,7 +23,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     smsListener = OtpAutofillPackage();
     controllers = List.generate(6, (_) => TextEditingController());
-    SmsAutoFill().getAppSignature.then((value) => print(value));
     super.initState();
   }
 
