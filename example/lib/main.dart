@@ -26,6 +26,12 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    smsListener.dispose();
+    super.dispose();
+  }
+
   void listen() {
     smsListener.startListening(onOtpReceived: fillInputs);
   }
@@ -35,7 +41,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   void fillInputs(String otp) {
-    debugPrint("fillInputs");
     if (otp.length == 6) {
       for (int i = 0; i < controllers.length; i++) {
         controllers[i].text = otp[i];
