@@ -44,6 +44,7 @@ class OtpAutofillPackagePlugin : FlutterPlugin, MethodCallHandler, ActivityAware
 
     private fun dispose() {
         otpReceiver?.dispose()
+        otpReceiver = null
         channel.setMethodCallHandler(null)
     }
 
