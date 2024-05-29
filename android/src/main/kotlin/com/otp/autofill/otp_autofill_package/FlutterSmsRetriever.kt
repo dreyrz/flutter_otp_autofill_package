@@ -38,7 +38,7 @@ class FlutterSmsRetriever(
                 Log.w(tag, "Waiting for SMS failed")
             }
         } catch(e: Exception){
-            Log.w(tag, "startReceiver $e")
+            Log.w(tag, "startReceiver $e ${e.stackTraceToString()}")
         }
     }
 
@@ -69,7 +69,7 @@ class FlutterSmsRetriever(
                 }
             }
         } catch (e: Exception){
-            Log.w(tag, "onReceive $e")
+            Log.w(tag, "onReceive $e ${e.stackTraceToString()}")
         }
     }
 }
