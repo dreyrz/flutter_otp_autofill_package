@@ -49,9 +49,9 @@ class FlutterSmsRetriever(
         }
     }
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(context: Context?, intent: Intent?) {
         try {
-            if (SmsRetriever.SMS_RETRIEVED_ACTION == intent.action) {
+            if (SmsRetriever.SMS_RETRIEVED_ACTION == intent?.action) {
                 val extras: Bundle? = intent.extras
                 val status: Status? = extras?.parcelable(SmsRetriever.EXTRA_STATUS)
                 when (status?.statusCode) {
@@ -60,11 +60,9 @@ class FlutterSmsRetriever(
                         val otp = retrieveOtpFromMessage(message)
                         emitOtp(otp)
                     }
-
                     CommonStatusCodes.TIMEOUT -> {
                         Log.w(tag, "Waiting for SMS timed out (5 minutes)")
                     }
-
                     else -> {
                         Log.w(tag, "onReceive unexpected error")
                     }
