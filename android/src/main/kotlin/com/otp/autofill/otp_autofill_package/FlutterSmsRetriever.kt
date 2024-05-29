@@ -27,14 +27,18 @@ class FlutterSmsRetriever(
     }
 
     override fun startReceiver() {
-        val client = SmsRetriever.getClient(activity)
-        val task = client.startSmsRetriever()
-        task.addOnSuccessListener {
-            Log.w(tag, "Waiting for SMS")
-            context.registerReceiver(this, intentFilter)
-        }
-        task.addOnFailureListener {
-            Log.w(tag, "Waiting for SMS failed")
+        try {
+            val client = SmsRetriever.getClient(activity)
+            val task = client.startSmsRetriever()
+            task.addOnSuccessListener {
+                Log.w(tag, "Waiting for SMS")
+                context.registerReceiver(this, intentFilter)
+            }
+            task.addOnFailureListener {
+                Log.w(tag, "Waiting for SMS failed")
+            }
+        } catch(e: Exception){
+            Log.w(tag, "startReceiver $e")
         }
     }
 
@@ -46,24 +50,28 @@ class FlutterSmsRetriever(
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (SmsRetriever.SMS_RETRIEVED_ACTION == intent.action) {
-            val extras: Bundle? = intent.extras
-            val status: Status? = extras?.parcelable(SmsRetriever.EXTRA_STATUS)
-            when (status?.statusCode) {
-                CommonStatusCodes.SUCCESS -> {
-                    val message = extras.getString(SmsRetriever.EXTRA_SMS_MESSAGE)
-                    val otp = retrieveOtpFromMessage(message)
-                    emitOtp(otp)
-                }
+        try {
+            if (SmsRetriever.SMS_RETRIEVED_ACTION == intent.action) {
+                val extras: Bundle? = intent.extras
+                val status: Status? = extras?.parcelable(SmsRetriever.EXTRA_STATUS)
+                when (status?.statusCode) {
+                    CommonStatusCodes.SUCCESS -> {
+                        val message = extras.getString(SmsRetriever.EXTRA_SMS_MESSAGE)
+                        val otp = retrieveOtpFromMessage(message)
+                        emitOtp(otp)
+                    }
 
-                CommonStatusCodes.TIMEOUT -> {
-                    Log.w(tag, "Waiting for SMS timed out (5 minutes)")
-                }
+                    CommonStatusCodes.TIMEOUT -> {
+                        Log.w(tag, "Waiting for SMS timed out (5 minutes)")
+                    }
 
-                else -> {
-                    Log.w(tag, "onReceive unexpected error")
+                    else -> {
+                        Log.w(tag, "onReceive unexpected error")
+                    }
                 }
             }
+        } catch (e: Exception){
+            Log.w(tag, "onReceive $e")
         }
     }
 }
