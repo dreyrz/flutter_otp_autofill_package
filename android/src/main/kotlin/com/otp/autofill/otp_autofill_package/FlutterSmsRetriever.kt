@@ -21,10 +21,6 @@ class FlutterSmsRetriever(
 
     private val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
     private val tag = FlutterSmsRetriever::class.qualifiedName
-    override fun dispose() {
-        Log.w(tag, "dispose")
-        context.unregisterReceiver(this)
-    }
 
     override fun startReceiver() {
         try {
@@ -42,11 +38,9 @@ class FlutterSmsRetriever(
         }
     }
 
-    private fun emitOtp(otp: String?) {
-        if (otp != null) {
-            Log.w(tag, "Otp emitted $otp")
-            onOtpReceived(otp)
-        }
+    override fun dispose() {
+        Log.w(tag, "dispose")
+        context.unregisterReceiver(this)
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -70,6 +64,13 @@ class FlutterSmsRetriever(
             }
         } catch (e: Exception){
             Log.w(tag, "onReceive $e ${e.stackTraceToString()}")
+        }
+    }
+
+    private fun emitOtp(otp: String?) {
+        if (otp != null) {
+            Log.w(tag, "Otp emitted $otp")
+            onOtpReceived(otp)
         }
     }
 }

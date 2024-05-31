@@ -33,6 +33,7 @@ class OtpAutofillPackagePlugin : FlutterPlugin, MethodCallHandler, ActivityAware
 
             ("dispose") -> {
                 otpReceiver?.dispose()
+                otpReceiver = null
                 result.success("receiver disposed")
             }
 
