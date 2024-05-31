@@ -5,8 +5,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.core.os.BundleCompat
+import androidx.core.os.BundleCompat.getParcelable
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
@@ -33,7 +36,7 @@ class FlutterSmsRetriever(
             task.addOnFailureListener {
                 Log.w(tag, "Waiting for SMS failed")
             }
-        } catch(e: Exception){
+        } catch (e: Exception) {
             Log.w(tag, "startReceiver $e ${e.stackTraceToString()}")
         }
     }
@@ -54,15 +57,17 @@ class FlutterSmsRetriever(
                         val otp = retrieveOtpFromMessage(message)
                         emitOtp(otp)
                     }
+
                     CommonStatusCodes.TIMEOUT -> {
                         Log.w(tag, "Waiting for SMS timed out (5 minutes)")
                     }
+
                     else -> {
                         Log.w(tag, "onReceive unexpected error")
                     }
                 }
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Log.w(tag, "onReceive $e ${e.stackTraceToString()}")
         }
     }
