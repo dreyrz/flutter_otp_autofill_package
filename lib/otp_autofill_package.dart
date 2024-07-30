@@ -29,12 +29,16 @@ class OtpAutofillPackage {
 
   Future<void> startListening({
     OtpCallback? onOtpReceived,
+    bool useConsentApi = false,
   }) async {
     if (_isListening) return;
     if (_otpStream.isClosed) {
       _otpStream = StreamController.broadcast();
     }
-    await _channel.invokeMethod('startListening');
+    await _channel.invokeMethod(
+      'startListening',
+      {"useConsentApi": useConsentApi},
+    );
     _isListening = true;
     _otpCallback = onOtpReceived;
   }

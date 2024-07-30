@@ -23,7 +23,7 @@ class FlutterSmsRetriever(
 ) : BroadcastReceiver(), OtpReceiver {
 
     private val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
-    private val tag = FlutterSmsRetriever::class.qualifiedName
+    private val tag = "FlutterSmsRetriever"
 
     override fun startReceiver() {
         try {
@@ -72,7 +72,7 @@ class FlutterSmsRetriever(
         }
     }
 
-    private fun emitOtp(otp: String?) {
+    override fun emitOtp(otp: String?) {
         if (otp != null) {
             Log.w(tag, "Otp emitted $otp")
             onOtpReceived(otp)

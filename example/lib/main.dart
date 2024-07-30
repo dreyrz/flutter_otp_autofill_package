@@ -32,8 +32,11 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  void listen() {
-    smsListener.startListening(onOtpReceived: fillInputs);
+  void listen({bool useConsentApi = false}) {
+    smsListener.startListening(
+      onOtpReceived: fillInputs,
+      useConsentApi: useConsentApi,
+    );
   }
 
   void destroy() {
@@ -63,6 +66,10 @@ class _MyAppState extends State<MyApp> {
                     ElevatedButton(
                       onPressed: () => listen(),
                       child: const Text('SMS Retriever'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => listen(useConsentApi: true),
+                      child: const Text('SMS Consent'),
                     ),
                     ElevatedButton(
                       onPressed: destroy,
