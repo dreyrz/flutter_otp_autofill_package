@@ -1,6 +1,6 @@
 # otp_autofill_package
 
-A new Flutter plugin project.
+Plugin to use Android's native SMS Retriever and SMS User Consent APIs.
 
 ## Getting Started
 
